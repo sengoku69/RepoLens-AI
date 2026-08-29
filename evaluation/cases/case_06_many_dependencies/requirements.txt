@@ -1,0 +1,10 @@
+pytest
+requests
+flask
+django
+numpy
+pandas
+torch
+transformers
+langchain
+fastapi

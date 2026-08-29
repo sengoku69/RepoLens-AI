@@ -9,16 +9,9 @@ from tools.repository_scanner import scan_repository
 from tools.test_runner import collect_test_evidence
 
 
-def collect_repository_evidence(repository_path: str) -> dict:
-    """
-    Collect all currently supported evidence for a repository.
-
-    Evidence sources:
-    - Repository structure
-    - Dependencies
-    - Test execution
-    """
-
+def collect_repository_evidence(
+    repository_path: str,
+) -> dict:
     root = Path(repository_path).resolve()
 
     if not root.exists():
@@ -31,15 +24,28 @@ def collect_repository_evidence(repository_path: str) -> dict:
             f"Path is not a directory: {root}"
         )
 
-    repository_evidence = scan_repository(str(root))
-    dependency_evidence = collect_dependencies(str(root))
-    test_evidence = collect_test_evidence(str(root))
+    repository_evidence = scan_repository(
+        str(root),
+        exclude_evaluation=True,
+    )
+
+    dependency_evidence = collect_dependencies(
+        str(root)
+    )
+
+    test_evidence = collect_test_evidence(
+        str(root)
+    )
 
     return {
         "repository": {
             "path": str(root),
-            "file_count": repository_evidence["file_count"],
-            "languages": repository_evidence["languages"],
+            "file_count": repository_evidence[
+                "file_count"
+            ],
+            "languages": repository_evidence[
+                "languages"
+            ],
             "source_directories": repository_evidence[
                 "source_directories"
             ],
@@ -97,7 +103,9 @@ def main() -> None:
         FileNotFoundError,
         NotADirectoryError,
     ) as error:
-        print(f"Error: {error}")
+        print(
+            f"Error: {error}"
+        )
         sys.exit(1)
 
 

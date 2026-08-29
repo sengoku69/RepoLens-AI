@@ -82,14 +82,21 @@ CONFIG_FILES = {
 }
 
 
-def scan_repository(repository_path: str) -> dict:
+def scan_repository(
+    repository_path: str,
+    exclude_evaluation: bool = False,
+) -> dict:
     root = Path(repository_path).resolve()
 
     if not root.exists():
-        raise FileNotFoundError(f"Repository does not exist: {root}")
+        raise FileNotFoundError(
+            f"Repository does not exist: {root}"
+        )
 
     if not root.is_dir():
-        raise NotADirectoryError(f"Path is not a directory: {root}")
+        raise NotADirectoryError(
+            f"Path is not a directory: {root}"
+        )
 
     files = []
     languages = {}
@@ -103,77 +110,147 @@ def scan_repository(repository_path: str) -> dict:
             continue
 
         relative_path = path.relative_to(root)
-        parts = set(relative_path.parts)
+        relative_parts = relative_path.parts
 
-        # Ignore generated, virtual-environment, and version-control directories.
-        if parts.intersection(IGNORED_DIRECTORIES):
+        if any(
+            part in IGNORED_DIRECTORIES
+            for part in relative_parts
+        ):
             continue
 
-        # Never expose local environment/secret files.
-        if path.name in IGNORED_FILES or path.name.startswith(".env."):
+        if (
+            exclude_evaluation
+            and relative_parts
+            and relative_parts[0].lower()
+            == "evaluation"
+        ):
+            continue
+
+        if (
+            path.name in IGNORED_FILES
+            or path.name.startswith(".env.")
+        ):
             continue
 
         relative_string = relative_path.as_posix()
+
         files.append(relative_string)
 
         extension = path.suffix.lower()
 
-        # Detect programming languages.
         if extension in SOURCE_EXTENSIONS:
             language = SOURCE_EXTENSIONS[extension]
-            languages[language] = languages.get(language, 0) + 1
 
-            if len(relative_path.parts) > 1:
-                source_directories.add(relative_path.parts[0])
+            languages[language] = (
+                languages.get(language, 0) + 1
+            )
 
-        # Detect test directories.
+            if len(relative_parts) > 1:
+                source_directories.add(
+                    relative_parts[0]
+                )
+
         if any(
-            directory.lower() in TEST_DIRECTORY_NAMES
-            for directory in relative_path.parts[:-1]
+            directory.lower()
+            in TEST_DIRECTORY_NAMES
+            for directory in relative_parts[:-1]
         ):
-            test_directories.add(relative_path.parts[0])
+            if len(relative_parts) > 1:
+                test_directories.add(
+                    relative_parts[0]
+                )
 
-        # Detect dependency files.
         if path.name in DEPENDENCY_FILES:
-            dependency_files.append(relative_string)
+            dependency_files.append(
+                relative_string
+            )
 
-        # Detect configuration files.
         if path.name in CONFIG_FILES:
-            config_files.append(relative_string)
+            config_files.append(
+                relative_string
+            )
 
-    # Detect README files.
     readme_files = [
         file
         for file in files
-        if Path(file).name.lower() in {"readme", "readme.md", "readme.txt"}
+        if Path(file).name.lower()
+        in {
+            "readme",
+            "readme.md",
+            "readme.txt",
+        }
     ]
 
     return {
         "repository_path": str(root),
         "file_count": len(files),
-        "languages": dict(sorted(languages.items())),
-        "source_directories": sorted(source_directories),
-        "test_directories": sorted(test_directories),
-        "dependency_files": sorted(dependency_files),
-        "configuration_files": sorted(config_files),
-        "readme_present": bool(readme_files),
-        "readme_files": sorted(readme_files),
+        "languages": dict(
+            sorted(languages.items())
+        ),
+        "source_directories": sorted(
+            source_directories
+        ),
+        "test_directories": sorted(
+            test_directories
+        ),
+        "dependency_files": sorted(
+            dependency_files
+        ),
+        "configuration_files": sorted(
+            config_files
+        ),
+        "readme_present": bool(
+            readme_files
+        ),
+        "readme_files": sorted(
+            readme_files
+        ),
         "files_sample": sorted(files)[:50],
     }
 
 
 def main() -> None:
-    if len(sys.argv) != 2:
-        print("Usage: python tools/repository_scanner.py <repository_path>")
+    if len(sys.argv) not in {2, 3}:
+        print(
+            "Usage: python tools/repository_scanner.py "
+            "<repository_path> [exclude_evaluation]"
+        )
         sys.exit(1)
 
     repository_path = sys.argv[1]
 
+    exclude_evaluation = False
+
+    if len(sys.argv) == 3:
+        exclude_evaluation = (
+            sys.argv[2].lower()
+            in {
+                "true",
+                "1",
+                "yes",
+            }
+        )
+
     try:
-        result = scan_repository(repository_path)
-        print(json.dumps(result, indent=2))
-    except (FileNotFoundError, NotADirectoryError) as error:
-        print(f"Error: {error}")
+        result = scan_repository(
+            repository_path,
+            exclude_evaluation=exclude_evaluation,
+        )
+
+        print(
+            json.dumps(
+                result,
+                indent=2,
+            )
+        )
+
+    except (
+        FileNotFoundError,
+        NotADirectoryError,
+    ) as error:
+        print(
+            f"Error: {error}"
+        )
         sys.exit(1)
 
 

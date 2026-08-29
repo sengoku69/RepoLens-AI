@@ -1,0 +1,133 @@
+{
+  "evaluation": "deterministic_baseline",
+  "case_count": 10,
+  "successful_cases": 10,
+  "average_score": 90.0,
+  "results": [
+    {
+      "case": "case_01_good_project",
+      "status": "success",
+      "score": 100,
+      "maximum_score": 100,
+      "percentage": 100.0,
+      "findings": []
+    },
+    {
+      "case": "case_02_no_readme",
+      "status": "success",
+      "score": 90,
+      "maximum_score": 100,
+      "percentage": 90.0,
+      "findings": [
+        {
+          "category": "documentation",
+          "severity": "medium",
+          "finding": "Repository does not contain a README."
+        }
+      ]
+    },
+    {
+      "case": "case_03_no_tests",
+      "status": "success",
+      "score": 60,
+      "maximum_score": 100,
+      "percentage": 60.0,
+      "findings": [
+        {
+          "category": "testing",
+          "severity": "medium",
+          "finding": "No dedicated test directory was detected."
+        },
+        {
+          "category": "testing",
+          "severity": "high",
+          "finding": "Repository test suite is not passing."
+        },
+        {
+          "category": "testing",
+          "severity": "medium",
+          "finding": "No executable tests were detected."
+        }
+      ]
+    },
+    {
+      "case": "case_04_no_dependencies",
+      "status": "success",
+      "score": 80,
+      "maximum_score": 100,
+      "percentage": 80.0,
+      "findings": [
+        {
+          "category": "dependencies",
+          "severity": "medium",
+          "finding": "No dependency file was detected."
+        },
+        {
+          "category": "dependencies",
+          "severity": "low",
+          "finding": "No dependencies were detected."
+        }
+      ]
+    },
+    {
+      "case": "case_05_failing_tests",
+      "status": "success",
+      "score": 80,
+      "maximum_score": 100,
+      "percentage": 80.0,
+      "findings": [
+        {
+          "category": "testing",
+          "severity": "high",
+          "finding": "Repository test suite is not passing."
+        }
+      ]
+    },
+    {
+      "case": "case_06_many_dependencies",
+      "status": "success",
+      "score": 100,
+      "maximum_score": 100,
+      "percentage": 100.0,
+      "findings": []
+    },
+    {
+      "case": "case_07_empty_source",
+      "status": "success",
+      "score": 100,
+      "maximum_score": 100,
+      "percentage": 100.0,
+      "findings": []
+    },
+    {
+      "case": "case_08_multiple_modules",
+      "status": "success",
+      "score": 100,
+      "maximum_score": 100,
+      "percentage": 100.0,
+      "findings": []
+    },
+    {
+      "case": "case_09_documented_project",
+      "status": "success",
+      "score": 100,
+      "maximum_score": 100,
+      "percentage": 100.0,
+      "findings": []
+    },
+    {
+      "case": "case_10_mixed_quality",
+      "status": "success",
+      "score": 90,
+      "maximum_score": 100,
+      "percentage": 90.0,
+      "findings": [
+        {
+          "category": "documentation",
+          "severity": "medium",
+          "finding": "Repository does not contain a README."
+        }
+      ]
+    }
+  ]
+}
