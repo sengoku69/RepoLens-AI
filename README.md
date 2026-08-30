@@ -11,6 +11,33 @@ The main goal is simple:
 
 This approach helps reduce unsupported or purely speculative findings from an LLM.
 
+Quick Start
+-----------
+
+1. Install dependencies
+
+pip install -r requirements.txt
+
+2. Configure the LLM
+
+Create a .env file with your provider configuration.
+
+3. Analyze the current repository
+
+python -m repolens
+
+4. Analyze another repository
+
+python -m repolens D:\Projects\my-project
+
+5. View CLI help
+
+python -m repolens --help
+
+6. Run tests
+
+python -m pytest tests/
+
 
 Project Overview
 ----------------
