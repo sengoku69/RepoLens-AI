@@ -270,6 +270,25 @@ Severity counts
 
 This gives the pipeline an additional layer of protection against unsupported AI conclusions.
 
+Architecture
+------------
+
+The main workflow follows this sequence:
+
+Repository
+
+↓
+
+Evidence Collection
+
+...
+
+Architecture Diagram
+--------------------
+
+The diagram below shows the complete RepoLens-AI workflow, from repository analysis and evidence collection to LLM reasoning, verification, and final report generation.
+
+![RepoLens-AI Architecture](architecture.png)
 
 Risk Scoring
 ------------
