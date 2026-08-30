@@ -290,6 +290,16 @@ The diagram below shows the complete RepoLens-AI workflow, from repository analy
 
 ![RepoLens-AI Architecture](architecture.png)
 
+How It Works
+------------
+
+RepoLens-AI can be run locally from the project root.
+
+Start the analysis with:
+
+```powershell
+python -m repolens
+
 Risk Scoring
 ------------
 
