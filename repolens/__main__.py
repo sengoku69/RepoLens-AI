@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import sys
 from typing import Any
 
@@ -142,18 +143,43 @@ def _print_final_report(
     print("-" * 58)
 
 
-def main() -> None:
-    repository_path = (
-        sys.argv[1]
-        if len(sys.argv) > 1
-        else "."
+def _parse_arguments() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        prog="python -m repolens",
+        description=(
+            "Analyze a software repository and "
+            "generate an evidence-backed risk report."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  python -m repolens\n"
+            "  python -m repolens D:\\Projects\\my-project\n"
+            "  python -m repolens --help"
+        ),
     )
+
+    parser.add_argument(
+        "repository_path",
+        nargs="?",
+        default=".",
+        help=(
+            "Path to the repository to analyze. "
+            "Defaults to the current directory."
+        ),
+    )
+
+    return parser.parse_args()
+
+
+def main() -> None:
+    args = _parse_arguments()
 
     try:
         _print_header()
 
         print(
-            f"Repository: {repository_path}"
+            f"Repository: {args.repository_path}"
         )
         print()
         print(
@@ -162,7 +188,7 @@ def main() -> None:
         print()
 
         result = run_repolens(
-            repository_path
+            args.repository_path
         )
 
         _print_final_report(result)
